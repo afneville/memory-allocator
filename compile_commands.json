@@ -1,0 +1,29 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-I",
+      "./inc",
+      "-c",
+      "-o",
+      "obj/list_alloc.o",
+      "src/list_alloc.c"
+    ],
+    "directory": "/home/alex/repos/memory_allocator",
+    "file": "/home/alex/repos/memory_allocator/src/list_alloc.c",
+    "output": "/home/alex/repos/memory_allocator/obj/list_alloc.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "obj/list_alloc.o",
+      "-o",
+      "bin/setup",
+      "main/setup.c"
+    ],
+    "directory": "/home/alex/repos/memory_allocator",
+    "file": "/home/alex/repos/memory_allocator/main/setup.c",
+    "output": "/home/alex/repos/memory_allocator/bin/setup"
+  }
+]
