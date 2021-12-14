@@ -18,7 +18,18 @@ void destroy_arr_allocator() {
 }
 
 // allocator methods
-void arr_divide_space(void * ptr, unsigned int size) {};
+void arr_divide_space(void * ptr, unsigned int size) {
+    slot_header * start = (slot_header *) ptr;
+    slot_header * new = (slot_header *) (start->end + size);
+    new->size = start->size - size - HEADER_SIZE;
+    new->prev = start;
+    new->next = start->next;
+    new->in_use = 0;
+    if (new->next)
+        new->next->prev = new;
+    start->size = size;
+    start->next = new;
+};
 
 void arr_merge_space(void * ptr) {
     slot_header * freed = (slot_header *) ptr;
@@ -40,11 +51,29 @@ void arr_merge_space(void * ptr) {
 };
 
 void * arr_find_space(unsigned int size) {
+    slot_header * curr = arr_head;
+    while (curr) {
+        if (curr->in_use == 0 && curr->size >= size + HEADER_SIZE) // space will be split into two chunks, so it must be large enough for size and a new header.
+            return curr;
+        curr = curr->next; 
+    }
     return NULL;
 };
 
 void * arr_malloc(unsigned int size) {
-    return NULL;
+    if (!arr_head) {
+        init_arr_allocator();
+        arr_head->size = ARR_SIZE - HEADER_SIZE;
+        arr_head->prev = NULL;
+        arr_head->next = NULL;
+        arr_head->in_use = 0;
+    }
+    slot_header * new = arr_find_space(size);
+    if (!new)
+        return NULL;
+    arr_divide_space(new, size);
+    new->in_use = 1;
+    return new->end;
 };
 
 void * arr_calloc(unsigned int size) {
@@ -56,6 +85,6 @@ void * arr_calloc(unsigned int size) {
 void arr_free(void * ptr) {
     slot_header * header = (slot_header *) ((char *) ptr) - HEADER_SIZE;
     if (header >= arr_head && header <= (slot_header *) ((char *) arr) + ARR_SIZE) {
-        
+       header->in_use = 0; 
     }
 };
