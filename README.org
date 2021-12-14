@@ -1,0 +1,6 @@
+
+#+TITLE: Custom Memory Allocator
+
+This is an attempt to replicate the functionality of =malloc(3)= and the suite of related memory-management utilities. I plan to approach the problem in two steps, first prototyping the technique by managing the contents of a large array and subsequently requesting blocks of memory with the =sbrk(2)= system call.
+
+More documentation coming soon...
