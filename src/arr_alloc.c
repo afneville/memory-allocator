@@ -1,5 +1,6 @@
 #include "../inc/arr_alloc.h"
 #include "stdlib.h"
+#include <stdio.h>
 #include <string.h>
 
 // setup / teardown
@@ -88,3 +89,10 @@ void arr_free(void * ptr) {
        header->in_use = 0; 
     }
 };
+
+
+void print_slot_header(slot_header * ptr) {
+    printf("%d %d\n", ptr->in_use, ptr->size);
+};
+
+void print_slot_headers(slot_header * head_ptr);

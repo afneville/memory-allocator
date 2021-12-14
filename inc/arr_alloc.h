@@ -28,4 +28,8 @@ void * arr_malloc(unsigned int size);
 void * arr_calloc(unsigned int size);
 void arr_free(void * ptr);
 
+// debugging methods
+void print_slot_header(slot_header * ptr);
+void print_slot_headers(slot_header * head_ptr);
+
 #endif // arr_alloc_H
