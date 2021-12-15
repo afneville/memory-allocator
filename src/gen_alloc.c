@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-slot_header * mem_head;
+slot_header * mem_head = NULL;
+slot_header * mem_tail = NULL;
 
 void merge_mem_space(void * ptr) {
     slot_header * freed = (slot_header *) ptr;
@@ -12,13 +13,17 @@ void merge_mem_space(void * ptr) {
         if (next->next)
             next->next->prev = freed;
         freed->size = freed->size + next->size + HEADER_SIZE;
+        if (next == mem_tail)
+            mem_tail = freed;
     }
     slot_header * prev = freed->prev;
     if (prev && prev->in_use == 0) {
         prev->size = prev->size + freed->size + HEADER_SIZE;
         prev->next = freed->next;
-        if(freed->next)
+        if (freed->next)
           (freed->next)->prev = prev;
+        if (freed == mem_tail)
+            mem_tail = prev;
     }
 
 };
@@ -26,7 +31,7 @@ void merge_mem_space(void * ptr) {
 void * find_mem_space(unsigned int size) {
     slot_header * curr = mem_head;
     while (curr) {
-        if (curr->in_use == 0 && curr->size >= size + HEADER_SIZE) // space will be split into two chunks, so it must be large enough for size and a new header.
+        if (curr->in_use == 0 && curr->size >= size + HEADER_SIZE)
             return curr;
         curr = curr->next; 
     }
@@ -42,6 +47,8 @@ void divide_mem_space(void * ptr, unsigned int size) {
     new->in_use = 0;
     if (new->next)
         new->next->prev = new;
+    if (mem_tail == start)
+        mem_tail = new;
     start->size = size;
     start->next = new;
 };

@@ -12,6 +12,7 @@ typedef struct slot_header_T {
 } slot_header;
 
 extern slot_header * mem_head;
+extern slot_header * mem_tail;
 
 void divide_mem_space(void * ptr, unsigned int size);
 void merge_mem_space(void * ptr);

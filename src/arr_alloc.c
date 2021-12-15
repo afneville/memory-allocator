@@ -1,6 +1,5 @@
 #include "../inc/arr_alloc.h"
-#include "gen_alloc.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -12,7 +11,6 @@ slot_header * arr_head = NULL;
 void init_arr_allocator() {
     arr = malloc(ARR_SIZE);
     arr_head = arr;
-    mem_head = arr;
     memset(arr, 0, ARR_SIZE);
 }
 
@@ -28,6 +26,8 @@ void * arr_malloc(unsigned int size) {
         arr_head->prev = NULL;
         arr_head->next = NULL;
         arr_head->in_use = 0;
+        mem_head = arr_head;
+        mem_tail = arr_head;
     }
     slot_header * new = find_mem_space(size);
     if (!new)
@@ -45,9 +45,8 @@ void * arr_calloc(unsigned int size) {
 
 void arr_free(void * ptr) {
     slot_header * header = (slot_header *) (((char *) ptr) - HEADER_SIZE);
-    printf("%p == %p ?\n", arr_head, header); // debugging
-    if (header >= arr_head && header <= (slot_header *) ((char *) arr) + ARR_SIZE) {
-        printf("setting something to 0.\n");
+    if (header >= arr_head && header <= (slot_header *) (((char *) arr) + ARR_SIZE)) {
         header->in_use = 0;
+        merge_mem_space(header);
     }
 };
