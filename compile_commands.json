@@ -6,24 +6,54 @@
       "./inc",
       "-c",
       "-o",
-      "obj/list_alloc.o",
-      "src/list_alloc.c"
+      "obj/arr_alloc.o",
+      "src/arr_alloc.c"
     ],
     "directory": "/home/alex/repos/memory_allocator",
-    "file": "/home/alex/repos/memory_allocator/src/list_alloc.c",
-    "output": "/home/alex/repos/memory_allocator/obj/list_alloc.o"
+    "file": "/home/alex/repos/memory_allocator/src/arr_alloc.c",
+    "output": "/home/alex/repos/memory_allocator/obj/arr_alloc.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-I",
+      "./inc",
+      "-c",
+      "-o",
+      "obj/gen_alloc.o",
+      "src/gen_alloc.c"
+    ],
+    "directory": "/home/alex/repos/memory_allocator",
+    "file": "/home/alex/repos/memory_allocator/src/gen_alloc.c",
+    "output": "/home/alex/repos/memory_allocator/obj/gen_alloc.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-I",
+      "./inc",
+      "-c",
+      "-o",
+      "obj/sys_alloc.o",
+      "src/sys_alloc.c"
+    ],
+    "directory": "/home/alex/repos/memory_allocator",
+    "file": "/home/alex/repos/memory_allocator/src/sys_alloc.c",
+    "output": "/home/alex/repos/memory_allocator/obj/sys_alloc.o"
   },
   {
     "arguments": [
       "/usr/bin/gcc",
       "-c",
-      "obj/list_alloc.o",
+      "obj/arr_alloc.o",
+      "obj/gen_alloc.o",
+      "obj/sys_alloc.o",
       "-o",
-      "bin/setup",
-      "main/setup.c"
+      "bin/test_arr_alloc",
+      "main/test_arr_alloc.c"
     ],
     "directory": "/home/alex/repos/memory_allocator",
-    "file": "/home/alex/repos/memory_allocator/main/setup.c",
-    "output": "/home/alex/repos/memory_allocator/bin/setup"
+    "file": "/home/alex/repos/memory_allocator/main/test_arr_alloc.c",
+    "output": "/home/alex/repos/memory_allocator/bin/test_arr_alloc"
   }
 ]

@@ -7,10 +7,12 @@
 // setup / teardown
 
 void * arr = NULL;
+slot_header * arr_head = NULL;
 
 void init_arr_allocator() {
     arr = malloc(ARR_SIZE);
     arr_head = arr;
+    mem_head = arr;
     memset(arr, 0, ARR_SIZE);
 }
 
@@ -39,4 +41,13 @@ void * arr_calloc(unsigned int size) {
     void * ptr = arr_malloc(size);
     memset(ptr, 0, size);
     return ptr;
+};
+
+void arr_free(void * ptr) {
+    slot_header * header = (slot_header *) (((char *) ptr) - HEADER_SIZE);
+    printf("%p == %p ?\n", arr_head, header); // debugging
+    if (header >= arr_head && header <= (slot_header *) ((char *) arr) + ARR_SIZE) {
+        printf("setting something to 0.\n");
+        header->in_use = 0;
+    }
 };

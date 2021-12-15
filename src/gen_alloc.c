@@ -1,7 +1,8 @@
 #include "../inc/gen_alloc.h"
 #include <stdlib.h>
+#include <stdio.h>
 
-slot_header * arr_head = NULL;
+slot_header * mem_head;
 
 void merge_mem_space(void * ptr) {
     slot_header * freed = (slot_header *) ptr;
@@ -23,7 +24,7 @@ void merge_mem_space(void * ptr) {
 };
 
 void * find_mem_space(unsigned int size) {
-    slot_header * curr = arr_head;
+    slot_header * curr = mem_head;
     while (curr) {
         if (curr->in_use == 0 && curr->size >= size + HEADER_SIZE) // space will be split into two chunks, so it must be large enough for size and a new header.
             return curr;
@@ -44,3 +45,16 @@ void divide_mem_space(void * ptr, unsigned int size) {
     start->size = size;
     start->next = new;
 };
+
+void print_mem_layout(slot_header * curr) {
+    printf("--------------\n");
+    printf("%p\n", curr);
+    printf("%d\n", curr->size);
+    printf("%d\n", curr->in_use);
+    printf("--------------\n");
+    if (curr->next) {
+        printf("\n");
+        print_mem_layout(curr->next);
+    }
+    return;
+}
