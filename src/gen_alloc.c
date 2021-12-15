@@ -54,11 +54,11 @@ void divide_mem_space(void * ptr, unsigned int size) {
 };
 
 void print_mem_layout(slot_header * curr) {
-    printf("--------------\n");
-    printf("%p\n", curr);
-    printf("%d\n", curr->size);
-    printf("%d\n", curr->in_use);
-    printf("--------------\n");
+    printf("+----------------+\n");
+    printf("| %p |\n", curr);
+    printf("| %d\n", curr->size);
+    printf("| %d              |\n", curr->in_use);
+    printf("+----------------+\n");
     if (curr->next) {
         printf("\n");
         print_mem_layout(curr->next);
