@@ -23,13 +23,20 @@ int main() {
 //    print_mem_layout((slot_header *) (((char *) test1) - HEADER_SIZE));
 //
 
-    char * one = (char *) syscall_malloc(1000);
-    print_mem_layout((slot_header *) (((char *) one) - HEADER_SIZE));
+    char * start = (char *) syscall_malloc(1000);
+    print_mem_layout((slot_header *) (((char *) start) - HEADER_SIZE));
+    printf("\n\n\n");
+    syscall_free(start);
+    print_mem_layout((slot_header *) (((char *) start) - HEADER_SIZE));
+    printf("\n\n\n");
+    char * one = (char *) syscall_malloc(100);
+    char * two = (char *) syscall_malloc(10);
+    print_mem_layout((slot_header *) (((char *) start) - HEADER_SIZE));
+    printf("\n\n\n");
     syscall_free(one);
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    print_mem_layout((slot_header *) (((char *) one) - HEADER_SIZE));
+    char * three = (char *) syscall_malloc(10);
+    char * four = (char *) syscall_malloc(100);
+    print_mem_layout((slot_header *) (((char *) start) - HEADER_SIZE));
+    printf("\n\n\n");
     return 0;
 }

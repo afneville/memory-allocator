@@ -34,12 +34,12 @@
       "./inc",
       "-c",
       "-o",
-      "obj/sys_alloc.o",
-      "src/sys_alloc.c"
+      "obj/syscall_alloc.o",
+      "src/syscall_alloc.c"
     ],
     "directory": "/home/alex/repos/memory_allocator",
-    "file": "/home/alex/repos/memory_allocator/src/sys_alloc.c",
-    "output": "/home/alex/repos/memory_allocator/obj/sys_alloc.o"
+    "file": "/home/alex/repos/memory_allocator/src/syscall_alloc.c",
+    "output": "/home/alex/repos/memory_allocator/obj/syscall_alloc.o"
   },
   {
     "arguments": [
@@ -47,7 +47,7 @@
       "-c",
       "obj/arr_alloc.o",
       "obj/gen_alloc.o",
-      "obj/sys_alloc.o",
+      "obj/syscall_alloc.o",
       "-o",
       "bin/test_arr_alloc",
       "main/test_arr_alloc.c"
@@ -55,5 +55,20 @@
     "directory": "/home/alex/repos/memory_allocator",
     "file": "/home/alex/repos/memory_allocator/main/test_arr_alloc.c",
     "output": "/home/alex/repos/memory_allocator/bin/test_arr_alloc"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "obj/arr_alloc.o",
+      "obj/gen_alloc.o",
+      "obj/syscall_alloc.o",
+      "-o",
+      "bin/test_sys_alloc",
+      "main/test_sys_alloc.c"
+    ],
+    "directory": "/home/alex/repos/memory_allocator",
+    "file": "/home/alex/repos/memory_allocator/main/test_sys_alloc.c",
+    "output": "/home/alex/repos/memory_allocator/bin/test_sys_alloc"
   }
 ]

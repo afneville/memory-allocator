@@ -3,4 +3,127 @@
 
 This is an attempt to replicate the functionality of =malloc(3)= and the suite of related memory-management utilities. I plan to approach the problem in two steps, first prototyping the technique by managing the contents of a large array and subsequently requesting blocks of memory with the =sbrk(2)= system call.
 
-More documentation coming soon...
+* Understanding Memory Allocation
+
+Besides processor scheduling, memory management is one of the most important roles of the operating system. This is sometimes called free-space management. This project is a tangential demonstration of process-private address space management. Ordinarily, this is handled by a standard library function wrapping a /system call/. The pointers and memory addresses observed in this demonstration are /virtual/. The policies which govern memory allocation are the subject of much interest. The approach adopted here is called /first-fit/, others include /best-fit/ and /buddy-allocation/.
+
+* Demonstration
+** Creating Some Free Space
+
+Using the =syscall_alloc()= function, request /1000/ bytes, which will return the memory layout seen in the left column: the 24b header and the corresponding 1000b slot, followed by the 24b header for the next slot of 0 bytes. Calling =syscall_free()= will liberate the 1000b slot and merge the first header with the second. The resulting 1024b of free space is illustrated in the right column.
+
+#+begin_src
+
++----------------+        +----------------+
+| 0x561cea4fd000 |        | 0x561cea4fd000 |
+| 1000           |   ->   | 1024           |
+| 1              |        | 0              |
++----------------+        +----------------+
+|      ....      |
++----------------+
+| 0x561cea4fd400 |
+| 0              |
+| 0              |
++----------------+
+
+#+end_src
+
+** Allocating Memory
+
+Requesting a 100b block, followed by 10b block from the artificially created free space will result in an address space configuration like this:
+
+#+begin_src
++----------------+
+| 0x561cea4fd000 |
+| 100            |  <-  100b block
+| 1              |
++----------------+
+|      ....      |
++----------------+
+| 0x561cea4fd07c |
+| 10             |  <-  10b block
+| 1              |
++----------------+
+|      ....      |
++----------------+
+| 0x561cea4fd09e |
+| 866            |  <-  free space
+| 0              |
++----------------+
+#+end_src
+
+** Freeing Memory
+
+If the first 100b block is freed, free space is created at the beginning of the address space:
+
+#+begin_src
++----------------+
+| 0x561cea4fd000 |
+| 100            |  <-  free space
+| 0              |
++----------------+
+|      ....      |
++----------------+
+| 0x561cea4fd07c |
+| 10             |  <-  10b block
+| 1              |
++----------------+
+|      ....      |
++----------------+
+| 0x561cea4fd09e |
+| 866            |  <-  free space
+| 0              |
++----------------+
+#+end_src
+
+** First Fit
+
+If a further 10b are requested, the first available free space is used, dividing the 100b region at the head of the address space. This will leave a smaller 66b free-space, /before/ the next allocated chuck. If another large 100b slot is requested, the first 66b chunk is too small and so space at the end of the occupied part of the address space is allocated. The updated state of the address space is shown below.
+
+#+begin_src
++----------------+
+| 0x561cea4fd000 |
+| 10             |  <-  10b block
+| 1              |
++----------------+
+|      ....      |
++----------------+
+| 0x561cea4fd022 |
+| 66             |  <-  free space
+| 0              |
++----------------+
+|      ....      |
++----------------+
+| 0x561cea4fd07c |
+| 10             |  <-  10b block
+| 1              |
++----------------+
+|      ....      |
++----------------+
+| 0x561cea4fd09e |
+| 100            |  <-  100b block
+| 1              |
++----------------+
+|      ....      |
++----------------+
+| 0x561cea4fd11a |
+| 742            |  <-  free space
+| 0              |
++----------------+
+#+end_src
+
+** Cleanup
+
+Finally, should all the allocated pointers be passed to the =sysalloc_free()= function, the free spaces are merged into one and the address space returns to the state that was configured initially.
+
+#+begin_src
++----------------+
+| 0x561cea4fd000 |
+| 1024           |
+| 0              |
++----------------+
+#+end_src
+
+* Project Setup
+
+Running =make= should be enough to setup and compile the project. Binaries generated from the files in the =main/= directory are placed in the =bin/= directory.
